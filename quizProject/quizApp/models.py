@@ -10,7 +10,7 @@ class Question(models.Model):
     ordering = ['question_num']
 
     def __str__(self):
-      return f"Question {self.question_num} by {self.author}"
+      return self.question
     
 class Choice(models.Model):
   question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="all_questions")
