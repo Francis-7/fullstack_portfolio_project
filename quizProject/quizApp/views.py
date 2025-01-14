@@ -56,3 +56,4 @@ def dashboard(request):
   user_profile = UserProfile.objects.get(user=request.user)
   questions = user_profile.question.all()
   choices = user_profile.choice.all()
+  return render(request, 'quizApp/dashboard.html', {'questions' : questions, 'choices' : choices})
