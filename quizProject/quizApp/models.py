@@ -53,3 +53,6 @@ class UserAnswer(models.Model):
   class Meta:
     db_table = 'user_answer'
     unique_together = ('user', 'question')
+  
+  def __str__(self):
+    return f"{self.user.username} answered {self.choice.choice} for {self.question.question}"
