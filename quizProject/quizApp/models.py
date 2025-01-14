@@ -44,3 +44,8 @@ class Score(models.Model):
   
   def __str__(self):
     return f"{self.user.username} - {self.score} ({self.date_recorded})"
+
+class UserAnswer(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  question = models.ForeignKey(Question, on_delete=models.CASCADE)
+  choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
