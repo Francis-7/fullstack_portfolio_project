@@ -54,3 +54,5 @@ def home(request):
 @login_required
 def dashboard(request):
   user_profile = UserProfile.objects.get(user=request.user)
+  questions = user_profile.question.all()
+  choices = user_profile.choice.all()
