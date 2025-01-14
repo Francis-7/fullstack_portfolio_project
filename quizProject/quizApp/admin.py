@@ -15,3 +15,12 @@ class ChoiceAdmin(admin.ModelAdmin):
   def question_tag(self, obj):
     question = obj.question_set.all()
     if len(question) == 0:
+      return format_html("<i>None</i>")
+    plural = ""
+    if len(question) > 1:
+      plural = "s"
+
+    parm = "?id__in=" + ",".join([str(q.id) for q in question])
+    url = reverse("admin:question_question_changelist") + parm
+    return format_html('<a href="{}">Question{}</a>', url, plural)
+  question_tag.short_description = "Questions"
