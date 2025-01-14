@@ -41,3 +41,6 @@ class Score(models.Model):
   class Meta:
     db_table = 'Scores'
     ordering = ['-date_recorded']
+  
+  def __str__(self):
+    return f"{self.user.username} - {self.score} ({self.date_recorded})"
