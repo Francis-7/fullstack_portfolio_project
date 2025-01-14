@@ -17,3 +17,10 @@ class Choice(models.Model):
   Options = models.TextChoices('Options', 'A B C D')
   choice = models.CharField(max_length=1, choices=Options, unique=True)
   answer_to_question = models.TextField(unique=True, default="your answer")
+
+  class Meta:
+    db_table = 'choices'
+    ordering = ['choice']
+
+    def __str__(self):
+      return f"{self.choice}: {self.answer_to_question}"
