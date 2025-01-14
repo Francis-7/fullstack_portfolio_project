@@ -37,3 +37,6 @@ class Score(models.Model):
   score = models.IntegerField()
   date_recorded = models.DateTimeField(auto_now_add=True)
   quiz_name = models.CharField(max_length=30, blank=True, null=True)
+
+  class Meta:
+    db_table = 'Scores'
