@@ -31,3 +31,6 @@ class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   question = models.ManyToManyField(Question)
   choice = models.ManyToManyField(Choice)
+
+class Score(models.Model):
+  
