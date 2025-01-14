@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .models import UserProfile, Question, Choice
 
 # Registration view
 def register(request):
