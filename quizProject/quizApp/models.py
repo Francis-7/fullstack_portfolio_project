@@ -40,3 +40,4 @@ class Score(models.Model):
 
   class Meta:
     db_table = 'Scores'
+    ordering = ['-date_recorded']
