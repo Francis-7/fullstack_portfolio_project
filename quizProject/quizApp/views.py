@@ -4,6 +4,7 @@ from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Question, Choice, Score
+from django.http import HttpResponse
 
 # Registration view
 def register(request):
