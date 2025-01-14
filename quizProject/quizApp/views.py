@@ -40,4 +40,11 @@ def login(request):
   return render(request, 'quizApp/login.html', {'form' : form})
 
 
+# logout a user
+def logout(request):
+  logout(request)
+  return redirect('login')
 
+# home view
+def home(request):
+  return render(request, 'quizApp/home.html')
