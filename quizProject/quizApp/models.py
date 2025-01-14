@@ -52,3 +52,4 @@ class UserAnswer(models.Model):
 
   class Meta:
     db_table = 'user_answer'
+    unique_together = ('user', 'question')
