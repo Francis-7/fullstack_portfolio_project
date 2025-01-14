@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Question(models.Model):
   question_num = models.IntegerField(primary_key=True)
@@ -24,3 +25,9 @@ class Choice(models.Model):
 
   def __str__(self):
     return f"{self.choice}: {self.answer_to_question}"
+
+
+class UserProfile(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  question = models.ManyToManyField(Question)
+  choice = models.ManyToManyField(Choice)
