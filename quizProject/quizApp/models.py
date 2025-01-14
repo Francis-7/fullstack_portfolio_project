@@ -9,8 +9,8 @@ class Question(models.Model):
     db_table = 'questions'
     ordering = ['question_num']
 
-    def __str__(self):
-      return f"{self.question_num}: {self.question}  - {self.author}"
+  def __str__(self):
+    return f"{self.question}"
     
 class Choice(models.Model):
   question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="all_questions", default='{question.question}')
@@ -20,7 +20,7 @@ class Choice(models.Model):
 
   class Meta:
     db_table = 'choices'
-    ordering = ['question', 'choice']
+    ordering = ['id']
 
-    def __str__(self):
-      return f"{self.choice}: {self.answer_to_question}"
+  def __str__(self):
+    return f"{self.choice}: {self.answer_to_question}"
