@@ -15,7 +15,7 @@ class Question(models.Model):
 class Choice(models.Model):
   question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="all_questions")
   Options = models.TextChoices('Options', 'A B C D')
-  choice = models.CharField(max_length=1, choices=Options, unique=True)
+  choice = models.CharField(max_length=1, choices=Options)
   answer_to_question = models.TextField(unique=True, default="your answer")
 
   class Meta:
