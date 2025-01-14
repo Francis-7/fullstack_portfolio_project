@@ -36,3 +36,4 @@ class Score(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   score = models.IntegerField()
   date_recorded = models.DateTimeField(auto_now_add=True)
+  quiz_name = models.CharField(max_length=30, blank=True, null=True)
