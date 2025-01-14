@@ -33,4 +33,6 @@ class UserProfile(models.Model):
   choice = models.ManyToManyField(Choice)
 
 class Score(models.Model):
-  
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  score = models.IntegerField()
+  date_recorded = models.DateTimeField(auto_now_add=True)
