@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Question, Choice, Score
+from .models import UserProfile, Question, Choice, Score, UserAnswer
 from django.http import HttpResponse
 
 # Registration view
