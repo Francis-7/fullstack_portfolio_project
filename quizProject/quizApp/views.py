@@ -49,3 +49,8 @@ def logout(request):
 # home view
 def home(request):
   return render(request, 'quizApp/home.html')
+
+# user dashboard view
+@login_required
+def dashboard(request):
+  user_profile = UserProfile.objects.get(user=request.user)
