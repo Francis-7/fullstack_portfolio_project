@@ -13,14 +13,9 @@ class ChoiceAdmin(admin.ModelAdmin):
   list_display = ['choice', 'answer_to_question', 'question_tag']
 
   def question_tag(self, obj):
-    question = obj.question_set.all()
-    if len(question) == 0:
+    question = obj.question
+    if not question:
       return format_html("<i>None</i>")
-    plural = ""
-    if len(question) > 1:
-      plural = "s"
-
-    parm = "?id__in=" + ",".join([str(q.id) for q in question])
-    url = reverse("admin:question_question_changelist") + parm
-    return format_html('<a href="{}">Question{}</a>', url, plural)
+    
+    return format_html('<a href="{}">{}</a>', reverse("admin:quizApp_question_change", args=[question.question_num]), question)
   question_tag.short_description = "Questions"
