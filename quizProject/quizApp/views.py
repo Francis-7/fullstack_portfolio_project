@@ -64,3 +64,4 @@ def dashboard(request):
   return render(request, 'quizApp/dashboard.html', {'questions' : questions, 'choices' : choices})
 
 class QuestionListView(APIView):
+  def get(self, request, format=None):
