@@ -64,3 +64,6 @@ class QuizSession(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   start_time = models.DateTimeField(auto_now_add=True)
   end_time = models.DateTimeField()
+
+  def start_quiz(self):
+    self.end_time = self.start_time + timedelta(minutes=15)
