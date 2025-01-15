@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from datetime import timedelta
 
 class Question(models.Model):
   question_num = models.IntegerField(primary_key=True)
