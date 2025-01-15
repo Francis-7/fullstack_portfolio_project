@@ -7,7 +7,7 @@ from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSessio
 from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, permissions
 from .serializers import QuestionSerializer, QuizSerializer
 from django.utils import timezone
 
