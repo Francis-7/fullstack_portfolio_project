@@ -66,7 +66,8 @@ def dashboard(request):
 
 class QuestionList(generics.ListAPIView):
   queryset = Question.objects.all()
-  serializer_class = QuestionSerializer 
+  serializer_class = QuestionSerializer
+  permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 class QuestionListView(APIView):
   def get(self, request, format=None):
     questions = Question.objects.all()
