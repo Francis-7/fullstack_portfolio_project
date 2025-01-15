@@ -7,18 +7,19 @@ class Quiz(models.Model):
   name = models.CharField(max_length=100)
   description = models.TextField(null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
+  # quiz_id = models.IntegerField(default=1, primary_key=True, auto_created=True)
 
 
   class Meta:
-    orddering = ['name']
-    db_table = 'quiz'
+    ordering = ['name']
+    db_table = 'quiz_table'
     verbose_name_plural = 'Quizzes'
 
   def __str__(self):
     return f"{self.name} - {self.created_at}"
-
+  
 class Question(models.Model):
-  uiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions", default='new quiz')
+  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions", default=1)
   question_num = models.IntegerField(primary_key=True)
   question = models.TextField(unique=True)
   author = models.CharField(max_length=30)
