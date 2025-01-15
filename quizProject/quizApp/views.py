@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Question, Choice, Score, UserAnswer
 from django.http import HttpResponse
 from rest_framework.views import APIView
+from rest_framework.response import Response
 
 # Registration view
 def register(request):
