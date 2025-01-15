@@ -69,7 +69,13 @@ class QuestionListView(APIView):
     questions = Question.objects.all()
     serializer = QuestionSerializer(questions, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
-  
+
+ @login_required
+def quiz_page(request, quiz_id):
+  quiz = Quiz.objects.get(id=quiz_id)
+  questions = quiz.questions.all()
+  return render(request, 'quiz/quiz_page.html', {'quiz_name': quiz.name, 'questions': questions})
+ 
 @login_required
 def calculate_score(request):
   user = request.user
@@ -105,8 +111,3 @@ class QuizListView(APIView):
     return Response(serializer.data, status=status.HTTP_200_OK)
   
 
-@login_required
-def quiz_page(request, quiz_id):
-  quiz = Quiz.objects.get(id=quiz_id)
-  questions = quiz.questions.all()
-  return render(request, 'quiz/quiz_page.html', {'quiz_name': quiz.name, 'questions': questions})
