@@ -85,4 +85,4 @@ def calculate_score(request):
         user_answer = UserAnswer.objects.create(user=user, question_id=question_id, choice=choice)
 
         if choice.is_correct():
-          
+          correct_answers += 1
