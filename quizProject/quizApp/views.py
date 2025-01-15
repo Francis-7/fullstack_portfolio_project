@@ -73,3 +73,4 @@ class QuestionListView(APIView):
 @login_required
 def calculate_score(request):
   if request.method == 'POST':
+    user = request.user
