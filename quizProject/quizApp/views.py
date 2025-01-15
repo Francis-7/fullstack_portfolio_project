@@ -101,3 +101,4 @@ def calculate_score(request):
 class QuizListView(APIView):
   def get(self, request, format=None):
     quizzes = Quiz.objects.all()
+    serializer = QuizSerializer(quizzes, many=True)
