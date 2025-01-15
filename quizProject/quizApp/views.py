@@ -66,3 +66,4 @@ def dashboard(request):
 class QuestionListView(APIView):
   def get(self, request, format=None):
     questions = Question.objects.all()
+    serializer = QuestionSerializer(questions, many=True)
