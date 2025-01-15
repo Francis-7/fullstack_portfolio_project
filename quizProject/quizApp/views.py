@@ -3,12 +3,12 @@ from django.contrib.auth import login, authenticate, logout
 from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSession
+from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSession, Quiz
 from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import QuestionSerializer
+from .serializers import QuestionSerializer, QuizSerializer
 from django.utils import timezone
 
 # Registration view
@@ -97,3 +97,7 @@ def calculate_score(request):
     return JsonResponse({'score': score, 'correct_answers': correct_answers, 'total_questions': total_questions})
   
   return redirect('quiz_page')
+
+class QuizListView(APIView):
+  def get(self, request, format=None):
+    quizzes = Quiz.objects.all()
