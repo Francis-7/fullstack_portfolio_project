@@ -7,7 +7,7 @@ from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSessio
 from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from .serializers import QuestionSerializer, QuizSerializer
 from django.utils import timezone
 
@@ -64,13 +64,15 @@ def dashboard(request):
   choices = user_profile.choice.all()
   return render(request, 'quizApp/dashboard.html', {'questions' : questions, 'choices' : choices})
 
+class QuestionList(generics.ListAPIView):
+  queryset = Question.objects.all()
 class QuestionListView(APIView):
   def get(self, request, format=None):
     questions = Question.objects.all()
     serializer = QuestionSerializer(questions, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
- @login_required
+@login_required
 def quiz_page(request, quiz_id):
   quiz = Quiz.objects.get(id=quiz_id)
   questions = quiz.questions.all()
