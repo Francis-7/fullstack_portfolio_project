@@ -18,6 +18,7 @@ class Quiz(models.Model):
     return f"{self.name} - {self.created_at}"
 
 class Question(models.Model):
+  uiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions", default='new quiz')
   question_num = models.IntegerField(primary_key=True)
   question = models.TextField(unique=True)
   author = models.CharField(max_length=30)
