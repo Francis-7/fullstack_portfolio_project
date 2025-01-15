@@ -13,3 +13,7 @@ class QuestionSerializer(serializers.ModelSerializer):
   class Meta:
     model = Question
     fields = ['question_num', 'question', 'author', 'all_choices']
+
+
+class QuizSerializer(serializers.ModelSerializer):
+  questions = QuestionSerializer(many=True, read_only=True)
