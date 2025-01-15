@@ -67,3 +67,6 @@ class QuizSession(models.Model):
 
   def start_quiz(self):
     self.end_time = self.start_time + timedelta(minutes=15)
+
+  def is_time_up(self):
+    return timezone.now() > self.endtime
