@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Question, Choice, Score, UserAnswer
+from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSession
 from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -73,6 +73,7 @@ class QuestionListView(APIView):
 @login_required
 def calculate_score(request):
   user = request.user
+  session = QuizSession.objects.get_or_create(user=user)[0]
   if request.method == 'POST':
     user = request.user
     total_questions = len(request.POST.getlist('question_ids'))
