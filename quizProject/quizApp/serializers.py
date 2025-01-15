@@ -8,4 +8,4 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-  
+  all_choices = ChoiceSerializer(many=True, read_only=True)
