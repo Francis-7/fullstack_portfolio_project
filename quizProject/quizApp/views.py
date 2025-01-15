@@ -67,3 +67,4 @@ class QuestionListView(APIView):
   def get(self, request, format=None):
     questions = Question.objects.all()
     serializer = QuestionSerializer(questions, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
