@@ -69,3 +69,6 @@ class QuestionListView(APIView):
     questions = Question.objects.all()
     serializer = QuestionSerializer(questions, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+  
+@login_required
+def calculate_score(request):
