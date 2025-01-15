@@ -88,4 +88,5 @@ def calculate_score(request):
           correct_answers += 1
     
     score = (correct_answers / total_questions) * 100
-    Score.objects.create(user=user, score=score, date_recorded=timezone.now(), quiz_name=""))
+    Score.objects.create(user=user, score=score, date_recorded=timezone.now(), quiz_name="")
+    return JsonResponse({'score': score, 'correct_answers': correct_answers, 'total_questions': total_questions})
