@@ -74,3 +74,4 @@ class QuestionListView(APIView):
 def calculate_score(request):
   if request.method == 'POST':
     user = request.user
+    total_questions = len(request.POST.getlist('question_ids'))
