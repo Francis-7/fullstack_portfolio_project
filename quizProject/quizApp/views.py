@@ -90,3 +90,5 @@ def calculate_score(request):
     score = (correct_answers / total_questions) * 100
     Score.objects.create(user=user, score=score, date_recorded=timezone.now(), quiz_name="")
     return JsonResponse({'score': score, 'correct_answers': correct_answers, 'total_questions': total_questions})
+  
+  return redirect('quiz_page')
