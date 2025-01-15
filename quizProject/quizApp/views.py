@@ -74,6 +74,9 @@ class QuestionListView(APIView):
 def calculate_score(request):
   user = request.user
   session = QuizSession.objects.get_or_create(user=user)[0]
+  if session.is_time_up():
+    return JsonResponse({'error': 'Time is up! You cannot submit the quiz now.'})
+
   if request.method == 'POST':
     user = request.user
     total_questions = len(request.POST.getlist('question_ids'))
