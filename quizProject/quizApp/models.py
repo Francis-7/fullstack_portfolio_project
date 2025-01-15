@@ -7,7 +7,7 @@ class Quiz(models.Model):
   name = models.CharField(max_length=100)
   description = models.TextField(null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
-  # quiz_id = models.IntegerField(default=1, primary_key=True, auto_created=True)
+  
 
 
   class Meta:
@@ -19,7 +19,7 @@ class Quiz(models.Model):
     return f"{self.name} - {self.created_at}"
   
 class Question(models.Model):
-  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions", default=1)
+  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
   question_num = models.IntegerField(primary_key=True)
   question = models.TextField(unique=True)
   author = models.CharField(max_length=30)
