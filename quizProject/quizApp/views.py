@@ -83,3 +83,6 @@ def calculate_score(request):
       if selected_choice:
         choice = Choice.objects.get(id=selected_choice)
         user_answer = UserAnswer.objects.create(user=user, question_id=question_id, choice=choice)
+
+        if choice.is_correct():
+          
