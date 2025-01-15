@@ -7,7 +7,12 @@ class Quiz(models.Model):
   name = models.CharField(max_length=100)
   description = models.TextField(null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
-  pass
+
+
+  class Meta:
+    orddering = ['name']
+    db_table = 'quiz'
+    verbose_name_plural = 'Quizzes'
 
 class Question(models.Model):
   question_num = models.IntegerField(primary_key=True)
