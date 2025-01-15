@@ -62,3 +62,5 @@ def dashboard(request):
   questions = user_profile.question.all()
   choices = user_profile.choice.all()
   return render(request, 'quizApp/dashboard.html', {'questions' : questions, 'choices' : choices})
+
+class QuestionListView(APIView):
