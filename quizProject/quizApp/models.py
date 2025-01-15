@@ -61,3 +61,4 @@ class UserAnswer(models.Model):
     return f"{self.user.username} answered {self.choice.choice} for {self.question.question}"
   
 class QuizSession(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
