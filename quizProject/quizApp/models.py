@@ -14,6 +14,9 @@ class Quiz(models.Model):
     db_table = 'quiz'
     verbose_name_plural = 'Quizzes'
 
+  def __str__(self):
+    return f"{self.name} - {self.created_at}"
+
 class Question(models.Model):
   question_num = models.IntegerField(primary_key=True)
   question = models.TextField(unique=True)
