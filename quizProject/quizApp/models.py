@@ -62,3 +62,4 @@ class UserAnswer(models.Model):
   
 class QuizSession(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
+  start_time = models.DateTimeField(auto_now_add=True)
