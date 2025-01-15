@@ -79,3 +79,6 @@ def calculate_score(request):
 
     for question_id in request.POST.getlist('question_ids'):
       selected_choice = request.POST.get(f"question_{question_id}")
+
+      if selected_choice:
+        choice = Choice.objects.get(id=selected_choice)
