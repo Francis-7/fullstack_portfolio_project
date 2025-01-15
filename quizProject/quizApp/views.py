@@ -103,3 +103,10 @@ class QuizListView(APIView):
     quizzes = Quiz.objects.all()
     serializer = QuizSerializer(quizzes, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+  
+
+@login_required
+def quiz_page(request, quiz_id):
+  quiz = Quiz.objects.get(id=quiz_id)
+  questions = quiz.questions.all()
+  return render(request, 'quiz/quiz_page.html', {'quiz_name': quiz.name, 'questions': questions})
