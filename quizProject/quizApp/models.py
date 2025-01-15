@@ -18,6 +18,7 @@ class Choice(models.Model):
   Options = models.TextChoices('Options', 'A B C D')
   choice = models.CharField(max_length=1, choices=Options)
   answer_to_question = models.TextField(unique=True, default="your answer")
+  is_correct = models.BooleanField(default=False)
 
   class Meta:
     db_table = 'choices'
