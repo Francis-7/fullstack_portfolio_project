@@ -86,3 +86,5 @@ def calculate_score(request):
 
         if choice.is_correct():
           correct_answers += 1
+    
+    score = Score.objects.create(user=user, score=score, date_recorded=timezone.now(), quiz_name=""))
