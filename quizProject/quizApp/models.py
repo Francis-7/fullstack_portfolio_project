@@ -39,7 +39,7 @@ class Score(models.Model):
   quiz_name = models.CharField(max_length=30, blank=True, null=True)
 
   class Meta:
-    db_table = 'Scores'
+    db_table = 'scores'
     ordering = ['-date_recorded']
   
   def __str__(self):
