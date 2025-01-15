@@ -68,6 +68,8 @@ class QuestionList(generics.ListAPIView):
   queryset = Question.objects.all()
   serializer_class = QuestionSerializer
   permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+
+
 class QuestionListView(APIView):
   def get(self, request, format=None):
     questions = Question.objects.all()
@@ -114,4 +116,8 @@ class QuizListView(APIView):
     serializer = QuizSerializer(quizzes, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
   
+class QuizList(generics.ListAPIView):
+  queryset = Quiz.objects.all()
+  serializer_class = QuizSerializer
+  permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 
