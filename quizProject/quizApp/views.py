@@ -76,3 +76,5 @@ def calculate_score(request):
     user = request.user
     total_questions = len(request.POST.getlist('question_ids'))
     correct_answers = 0
+
+    for question_id in request.POST.getlist('question_ids'):
