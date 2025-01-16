@@ -1,1 +1,36 @@
-{% extends 'quizApp/base.html' %} {% block title %} Home {% endblock %}
+pd{% extends 'quizApp/base.html' %}
+
+
+{% block title %}
+    Home
+{% endblock %}
+
+
+{% block content %}
+    
+    <div class="jumbotron text-center mt-5 ">
+        <h1 class="display-4 ">Welcome to the Quiz app</h1>
+        <p class="fst-italic text-primary">Test your knowledge on variety of questions and compare your score at the end of each quiz</p>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Launch demo modal
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" allowfullscreen></iframe>
+                        </div>
+                        <p>Modal body text goes here.</p>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
