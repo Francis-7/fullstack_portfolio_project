@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Choice, UserProfile
+from .models import Question, Choice, UserProfile, Quiz
 from django.urls import reverse
 from django.utils.html import format_html
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -32,3 +32,7 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+@admin.register(Quiz)
+class QuizAdmin(admin.ModelAdmin):
+  list_display = ['name', 'id', 'description']
