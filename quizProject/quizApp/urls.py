@@ -9,4 +9,5 @@ urlpatterns = [
   path('api/questions/', views.QuestionListView.as_view(), name='question-list'),
   path('questions/', views.QuestionList.as_view(), name='question-list'),
   path('quizzes/', views.QuizList.as_view(), name='quiz-list'),
+  path('home/', views.home, name='home')
 ]
