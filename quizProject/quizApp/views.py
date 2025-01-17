@@ -1,3 +1,8 @@
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import UserRegistrationForm, UserLoginForm
@@ -17,7 +22,7 @@ def register(request):
     form = UserRegistrationForm(request.POST)
     if form.is_valid():
       user = form.save()
-      login(request, user)
+      auth_login(request, user)
       messages.success(request, 'Registration Successful!')
       return redirect('login')
     else:
@@ -27,29 +32,28 @@ def register(request):
   return render(request, 'quizApp/register.html', {'form' : form})
 
 # login the user view
-def login(request):
+def login_view(request):
   if request.method == 'POST':
-    form = UserLoginForm(request.POST)
+    form = UserLoginForm(data=request.POST)
     if form.is_valid():
-      username = form.cleaned_data.get('username')
-      password = form.cleaned_data.get('password')
-      user = authenticate(request, username=username, password=password)
+      username = form.cleaned_data['username']
+      password = form.cleaned_data['password']
+      user = authenticate(username=username, password=password)
       if user is not None:
-        login(request, user)
+        auth_login(request, user)
         messages.success(request, 'Login Successful')
-        return redirect('dashboard')
+        next_url = request.GET.get('next', 'dashboard')
+        return redirect(next_url)
       else:
         messages.error(request, 'Invalid username or password')
-    else:
-      messages.error(request, 'Invalid form submission')
   else:
     form = UserLoginForm()
   return render(request, 'quizApp/login.html', {'form' : form})
 
-
 # logout a user
-def logout(request):
-  logout(request)
+def logout_view(request):
+  auth_logout(request)
+  messages.success(request, 'You have successfully logged out!')
   return redirect('login')
 
 # home view
@@ -59,10 +63,15 @@ def home(request):
 # user dashboard view
 @login_required
 def dashboard(request):
-  user_profile = UserProfile.objects.get(user=request.user)
-  questions = user_profile.question.all()
-  choices = user_profile.choice.all()
-  return render(request, 'quizApp/dashboard.html', {'questions' : questions, 'choices' : choices})
+  # profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+  try:
+      profile = UserProfile.objects.get(user=request.user)
+  except UserProfile.DoesNotExist:
+      profile = None  # Handle the case where no profile exists for the user
+
+  return render(request, 'quizApp/dashboard.html', {'profile': profile})
+  
 
 class QuestionList(generics.ListAPIView):
   queryset = Question.objects.all()
@@ -121,3 +130,11 @@ class QuizList(generics.ListAPIView):
   serializer_class = QuizSerializer
   permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

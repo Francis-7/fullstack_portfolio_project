@@ -47,7 +47,7 @@ class Choice(models.Model):
 
 
 class UserProfile(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
   question = models.ManyToManyField(Question)
   choice = models.ManyToManyField(Choice)
 
