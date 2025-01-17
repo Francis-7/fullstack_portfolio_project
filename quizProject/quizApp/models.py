@@ -51,6 +51,8 @@ class UserProfile(models.Model):
   question = models.ManyToManyField(Question)
   choice = models.ManyToManyField(Choice)
 
+  
+
 class Score(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   score = models.IntegerField()
