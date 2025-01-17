@@ -1,8 +1,7 @@
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import UserRegistrationForm, UserLoginForm
@@ -17,38 +16,40 @@ from .serializers import QuestionSerializer, QuizSerializer
 from django.utils import timezone
 
 # Registration view
-def register(request):
-  if request.method == 'POST':
-    form = UserRegistrationForm(request.POST)
-    if form.is_valid():
-      user = form.save()
-      auth_login(request, user)
-      messages.success(request, 'Registration Successful!')
-      return redirect('login')
-    else:
-      messages.error(request, 'Error in Registration')
-  else:
-    form = UserRegistrationForm()
-  return render(request, 'quizApp/register.html', {'form' : form})
+# def register(request):
+#   if request.method == 'POST':
+#     form = UserRegistrationForm(request.POST)
+#     if form.is_valid():
+#       user = form.save()
+#       if not hasattr(user, 'userprofile'):
+#         UserProfile.objects.create(user=user)
+#       auth_login(request, user)
+#       messages.success(request, 'Registration Successful!')
+#       return redirect('login')
+#     else:
+#       messages.error(request, 'Error in Registration')
+#   else:
+#     form = UserRegistrationForm()
+#   return render(request, 'quizApp/register.html', {'form' : form})
 
 # login the user view
-def login_view(request):
-  if request.method == 'POST':
-    form = UserLoginForm(data=request.POST)
-    if form.is_valid():
-      username = form.cleaned_data['username']
-      password = form.cleaned_data['password']
-      user = authenticate(username=username, password=password)
-      if user is not None:
-        auth_login(request, user)
-        messages.success(request, 'Login Successful')
-        next_url = request.GET.get('next', 'dashboard')
-        return redirect(next_url)
-      else:
-        messages.error(request, 'Invalid username or password')
-  else:
-    form = UserLoginForm()
-  return render(request, 'quizApp/login.html', {'form' : form})
+# def login_view(request):
+#   if request.method == 'POST':
+#     form = UserLoginForm(data=request.POST)
+#     if form.is_valid():
+#       username = form.cleaned_data['username']
+#       password = form.cleaned_data['password']
+#       user = authenticate(username=username, password=password)
+#       if user is not None:
+#         auth_login(request, user)
+#         messages.success(request, 'Login Successful')
+#         next_url = request.GET.get('next', 'dashboard')
+#         return redirect(next_url)
+#       else:
+#         messages.error(request, 'Invalid username or password')
+#   else:
+#     form = UserLoginForm()
+#   return render(request, 'quizApp/login.html', {'form' : form})
 
 # logout a user
 def logout_view(request):
@@ -129,12 +130,3 @@ class QuizList(generics.ListAPIView):
   queryset = Quiz.objects.all()
   serializer_class = QuizSerializer
   permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
