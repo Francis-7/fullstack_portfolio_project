@@ -9,5 +9,11 @@ urlpatterns = [
   path('api/questions/', views.QuestionListView.as_view(), name='question-list'),
   path('questions/', views.QuestionList.as_view(), name='question-list'),
   path('quizzes/', views.QuizList.as_view(), name='quiz-list'),
-  path('home/', views.home, name='home')
+  path('home/', views.home, name='home'),
+  path('register/', views.register, name='register'),
+  path('login/', views.login, name='login'),
+  path('logout/', views.logout, name='logout'),
+  path('quiz_page/', views.quiz_page, name='quiz_page'),
+  path('dashboard/', views.dashboard, name='dashboard'),
+  path('calculate_score/', views.calculate_score, name='calculate_score'),
 ]
