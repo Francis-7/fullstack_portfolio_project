@@ -136,3 +136,6 @@ def user_post_save(sender, **kwargs):
     try:
       # double check user profile doesn't exist already
       UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+      # no user profile exists for this user, create one
+      UserProfile.objects.create(user=user)
