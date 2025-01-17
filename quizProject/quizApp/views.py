@@ -127,3 +127,7 @@ class QuizList(generics.ListAPIView):
   serializer_class = QuizSerializer
   permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
 
+@receiver(post_save, sender=User)
+def user_post_save(sender, **kwargs):
+  # create user profile object if user object is new and not loaded from fixture
+  if kwargs['created'] and not kwargs['raw']:
