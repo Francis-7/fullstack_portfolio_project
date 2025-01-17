@@ -21,9 +21,6 @@ def register(request):
     form = UserRegistrationForm(request.POST)
     if form.is_valid():
       user = form.save()
-      if not hasattr(user, 'userprofile'):
-        UserProfile.objects.create(user=user)
-      auth_login(request, user)
       messages.success(request, 'Registration Successful!')
       return redirect('login')
     else:
