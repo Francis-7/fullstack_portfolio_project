@@ -132,3 +132,7 @@ def user_post_save(sender, **kwargs):
   # create user profile object if user object is new and not loaded from fixture
   if kwargs['created'] and not kwargs['raw']:
     user = kwargs['instance']
+
+    try:
+      # double check user profile doesn't exist already
+      UserProfile.objects.get(user=user)
