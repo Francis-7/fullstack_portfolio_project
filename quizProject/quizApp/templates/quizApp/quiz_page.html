@@ -8,22 +8,32 @@
     <h1 class="display-4 text-center">{{ quiz.name }}</h1>
     <p>{{ quiz.description }}</p>
     <h2>Questions:</h2>
-    <ul>
+    <form method="post" class="jumbotron ">
+        {% csrf_token %}
+        
         {% for question in questions %}
-            <li><strong>{{ question.question }}</strong>
-                <ul>
+            <fieldset>
+                <legend>
+                    <h3>{{ question.question }}</h3>
+                </legend>
+                <ul class="list-group">
                     
                     {% for choice in question.all_questions.all %}
-                    <li>
-                        {{ choice.choice }}  {{ choice.answer_to_question }}
-                    </li>
-                        
+                        <li class="list-group-item">
+                            <label for="choices" class="form-check-label">
+                                <input class="form-check-input me-1 " type="radio" name="question_{{ question.question_num }}" value="{{ choice.id }}">
+                                {{ choice.answer_to_question }}
+                            </label>
+                        </li>
                     {% endfor %}
                         
                 </ul>
-            </li>
+            </fieldset>
         {% endfor %}
-    </ul>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end ">
+            <button class="btn btn-dark text-light btn-outline-success" type="submit">submit</button>
+        </div>
+    </form>
     
         
 {% endblock  %}
