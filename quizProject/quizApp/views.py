@@ -127,7 +127,7 @@ def user_post_save(sender, **kwargs):
       # no user profile exists for this user, create one
       UserProfile.objects.create(user=user)
 
-@api_view('GET', 'POST')
+@api_view(['GET', 'POST'])
 def quiz_list_view(request):
   if request.method == 'GET':
     quizzes = Quiz.objects.all()
