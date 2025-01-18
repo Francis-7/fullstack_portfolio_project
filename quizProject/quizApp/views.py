@@ -76,6 +76,12 @@ def dashboard(request):
 def quiz_page(request, quiz_id):
   quiz = get_object_or_404(Quiz, id=quiz_id)
   questions = quiz.questions.all()
+  if request.method == 'POST':
+    for question in questions:
+      selected_choice_id = request.POST.get(f'question_{question.question_num}')
+      if selected_choice_id:
+        selected_choice = get_object_or_404(Choice, id=selected_choice_id)
+      
   return render(request, 'quizApp/quiz_page.html', {'quiz': quiz, 'questions': questions})
  
 @login_required
