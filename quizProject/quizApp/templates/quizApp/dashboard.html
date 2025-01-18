@@ -9,8 +9,14 @@
     <div class="text-center">
         <h1>Your Dashboard</h1>
     </div>
-    <a href="{% url 'quiz_list' %}" class="btn btn-info"
+    <div class="text-center mt-5">
+        <a href="{% url 'quiz_list' %}" class="btn btn-info"
           >Go to Quiz</a
         >
+    <a href="{% url 'logout' %}" class="btn btn-danger position-relative start-10"
+          >Logout</a
+        >
+    </div>
+    
 {% endblock  %}
         

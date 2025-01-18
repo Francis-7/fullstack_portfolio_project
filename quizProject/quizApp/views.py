@@ -8,9 +8,10 @@ from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSessio
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import HttpResponse, JsonResponse
-from rest_framework.views import APIView
+
 from rest_framework.response import Response
-from rest_framework import status, generics, permissions
+
+
 from .serializers import QuestionSerializer, QuizSerializer, CreateChoiceSerializer, CreateQuestionSerializer
 from django.utils import timezone
 
@@ -68,19 +69,7 @@ def dashboard(request):
       profile = None  # Handle the case where no profile exists for the user
 
   return render(request, 'quizApp/dashboard.html', {'profile': profile})
-  
 
-class QuestionList(generics.ListAPIView):
-  queryset = Question.objects.all()
-  serializer_class = QuestionSerializer
-  permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
-
-
-class QuestionListView(APIView):
-  def get(self, request, format=None):
-    questions = Question.objects.all()
-    serializer = QuestionSerializer(questions, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @login_required
 def quiz_page(request, quiz_id):
@@ -122,16 +111,7 @@ def calculate_score(request):
   
   return redirect('quiz_page')
 
-class QuizListView(APIView):
-  def get(self, request, format=None):
-    quizzes = Quiz.objects.all()
-    serializer = QuizSerializer(quizzes, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-  
-class QuizList(generics.ListAPIView):
-  queryset = Quiz.objects.all()
-  serializer_class = QuizSerializer
-  permission_classes = [permissions.DjangoModelPermissionsOrAnonReadOnly]
+
 
 @receiver(post_save, sender=User)
 def user_post_save(sender, **kwargs):
