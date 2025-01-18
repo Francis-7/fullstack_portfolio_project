@@ -128,6 +128,18 @@ def user_post_save(sender, **kwargs):
       UserProfile.objects.create(user=user)
 
 @api_view(['GET', 'POST'])
+def quiz_questions(request, format=None):
+  if request.method == 'GET':
+    questions = Question.objects.all()
+    serializer = QuestionSerializer(questions, many=True)
+    return Response({'questions' : serializer.data})
+  elif request.method == 'POST':
+    serializer = QuestionSerializer(data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+@api_view(['GET', 'POST'])
 def quiz_list_view(request, format=None):
   if request.method == 'GET':
     quizzes = Quiz.objects.all()
