@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Question, Choice, Quiz
 
+
 class ChoiceSerializer(serializers.ModelSerializer):
   class Meta:
     model = Choice

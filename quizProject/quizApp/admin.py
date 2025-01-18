@@ -23,15 +23,15 @@ class ChoiceAdmin(admin.ModelAdmin):
   question_tag.short_description = "Questions"
 
 
-# class UserProfileInline(admin.StackedInline):
-#   model = UserProfile
-#   can_delete = False
+class UserProfileInline(admin.StackedInline):
+  model = UserProfile
+  can_delete = False
   
-# class UserAdmin(BaseUserAdmin):
-#   inlines = [UserProfileInline]
+class UserAdmin(BaseUserAdmin):
+  inlines = [UserProfileInline]
 
-# admin.site.unregister(User)
-# admin.site.register(User, UserAdmin)
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
