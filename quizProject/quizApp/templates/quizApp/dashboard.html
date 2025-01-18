@@ -7,7 +7,9 @@
 
 {% block content %}
     <div class="text-center">
-        <h1>Your Dashboard</h1>
+        <h2 class="fst-italic fw-light text-primary">Welcome {{ profile.user }}</h2>
+        
+        <h1 class="display-4">Your Dashboard</h1>
     </div>
     <div class="text-center mt-5">
         <a href="{% url 'quiz_list' %}" class="btn btn-info"
