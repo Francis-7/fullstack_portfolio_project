@@ -150,3 +150,9 @@ def quiz_detail_view(request, id):
   if request.method == 'POST':
     serializer = QuizSerializer(quiz)
     return Response(serializer.data)
+  elif request.method == 'PUT':
+    serializer = QuizSerializer(quiz, data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
