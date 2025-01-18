@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, aauthenticate
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -84,10 +84,16 @@ class QuestionListView(APIView):
 
 @login_required
 def quiz_page(request, quiz_id):
-  quiz = Quiz.objects.get(id=quiz_id)
+  quiz = get_object_or_404(Quiz, id=quiz_id)
   questions = quiz.questions.all()
-  return render(request, 'quiz/quiz_page.html', {'quiz_name': quiz.name, 'questions': questions})
+  return render(request, 'quizApp/quiz_page.html', {'quiz': quiz, 'questions': questions})
  
+@login_required
+def quiz_list(request):
+  quizzes = Quiz.objects.all()
+  return render(request, 'quizApp/quiz_list.html', {'quizzes' : quizzes})
+
+
 @login_required
 def calculate_score(request):
   user = request.user

@@ -1,0 +1,23 @@
+{% extends 'quizApp/base.html' %}
+
+{% block title %}
+    The Quiz List Page
+{% endblock  %}
+
+{% block content %}
+    <div>
+        <h1 class="display-4 p-2 text-center">Available Quizzes</h1>
+        <ul>
+            
+            {% for quiz in quizzes %}
+                <p>
+                    <li><a href="{% url 'quiz_page' quiz.id %}" class="btn btn-secondary">{{ quiz.name }}</a></li>
+                </p>
+                
+            {% endfor %}
+                
+        </ul>
+    </div>
+{% endblock  %}
+    
+    

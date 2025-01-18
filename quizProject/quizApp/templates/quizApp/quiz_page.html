@@ -1,0 +1,17 @@
+{% extends 'quizApp/base.html' %}
+
+{% block title %}
+    Welcome to the Quiz page
+{% endblock  %}
+
+{% block content %}
+    <h1 class="display-4 text-center">{{ quiz.name }}</h1>
+    <p>
+        
+        {% for question in questions %}
+            {{ question.question_num }}: {{ question.question }}
+        {% endfor %}
+            
+    </p>
+{% endblock  %}
+    
