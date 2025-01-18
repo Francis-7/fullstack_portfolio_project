@@ -125,3 +125,8 @@ def user_post_save(sender, **kwargs):
     except UserProfile.DoesNotExist:
       # no user profile exists for this user, create one
       UserProfile.objects.create(user=user)
+
+def quiz_list_view(request):
+  quizzes = Quiz.objects.all()
+  serializer = QuizSerializer(quizzes, many=True)
+  return JsonResponse({'quizzes' : serializer.data})
