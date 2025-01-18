@@ -128,7 +128,7 @@ def user_post_save(sender, **kwargs):
       UserProfile.objects.create(user=user)
 
 @api_view(['GET', 'POST'])
-def quiz_list_view(request):
+def quiz_list_view(request, format=None):
   if request.method == 'GET':
     quizzes = Quiz.objects.all()
     serializer = QuizSerializer(quizzes, many=True)
@@ -141,21 +141,26 @@ def quiz_list_view(request):
     
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def quiz_detail_view(request, id):
-  try:
-    quiz = Quiz.objects.get(id=id)
-  except Quiz.DoesNotExist:
-    return Response(status.HTTP_404_NOT_FOUND)
-  
-  if request.method == 'POST':
-    serializer = QuizSerializer(quiz)
-    return Response(serializer.data)
-  elif request.method == 'PUT':
-    serializer = QuizSerializer(quiz, data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-  elif request.method == 'DELETE':
-    quiz.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+def quiz_detail_view(request, id, format=None):
+    try:
+        quiz = Quiz.objects.get(id=id)
+    except Quiz.DoesNotExist:
+        return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Handling GET request
+    if request.method == 'GET':
+        serializer = QuizSerializer(quiz)
+        return Response(serializer.data)
+
+    # Handling PUT request
+    elif request.method == 'PUT':
+        serializer = QuizSerializer(quiz, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Handling DELETE request
+    elif request.method == 'DELETE':
+        quiz.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
