@@ -22,3 +22,13 @@ class QuizSerializer(serializers.ModelSerializer):
   class Meta:
         model = Quiz
         fields = ['id', 'name', 'description', 'questions']
+
+class CreateQuestionSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = Question
+      fields = ['question', 'quiz']
+
+class CreateChoiceSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = Choice
+      fields = ['choice', 'answer_to_question', 'is_correct', 'question']

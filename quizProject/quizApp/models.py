@@ -16,7 +16,7 @@ class Quiz(models.Model):
     verbose_name_plural = 'Quizzes'
 
   def __str__(self):
-    return f"{self.name} - {self.created_at}"
+    return f"{self.name}"
   
 class Question(models.Model):
   quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")

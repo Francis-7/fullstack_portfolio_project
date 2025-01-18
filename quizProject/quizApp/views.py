@@ -11,7 +11,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions
-from .serializers import QuestionSerializer, QuizSerializer
+from .serializers import QuestionSerializer, QuizSerializer, CreateChoiceSerializer, CreateQuestionSerializer
 from django.utils import timezone
 
 # Registration view
