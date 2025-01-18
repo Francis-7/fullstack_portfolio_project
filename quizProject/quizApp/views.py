@@ -132,9 +132,21 @@ def quiz_list_view(request):
   if request.method == 'GET':
     quizzes = Quiz.objects.all()
     serializer = QuizSerializer(quizzes, many=True)
-    return JsonResponse({'quizzes' : serializer.data})
+    return Response({'quizzes' : serializer.data})
   if request.method == 'POST':
     serializer = QuizSerializer(data=request.data)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def quiz_detail_view(request, id):
+  try:
+    quiz = Quiz.objects.get(id=id)
+  except Quiz.DoesNotExist:
+    return Response(status.HTTP_404_NOT_FOUND)
+  
+  if request.method == 'POST':
+    serializer = QuizSerializer(quiz)
+    return Response(serializer.data)
