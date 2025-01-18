@@ -8,7 +8,8 @@ from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSessio
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import HttpResponse, JsonResponse
-
+from rest_framework.decorators import api_view
+from rest_framework import status
 from rest_framework.response import Response
 
 
@@ -126,7 +127,14 @@ def user_post_save(sender, **kwargs):
       # no user profile exists for this user, create one
       UserProfile.objects.create(user=user)
 
+@api_view('GET', 'POST')
 def quiz_list_view(request):
-  quizzes = Quiz.objects.all()
-  serializer = QuizSerializer(quizzes, many=True)
-  return JsonResponse({'quizzes' : serializer.data})
+  if request.method == 'GET':
+    quizzes = Quiz.objects.all()
+    serializer = QuizSerializer(quizzes, many=True)
+    return JsonResponse({'quizzes' : serializer.data})
+  if request.method == 'POST':
+    serializer = QuizSerializer(data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
