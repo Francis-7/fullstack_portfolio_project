@@ -96,6 +96,25 @@ def quiz_list(request):
   quizzes = Quiz.objects.all()
   return render(request, 'quizApp/quiz_list.html', {'quizzes' : quizzes})
 
+@login_required
+def submit_quiz(request, quiz_id):
+  quiz = get_object_or_404(Quiz, id=quiz_id)
+  user = request.user
+  quiz_session = get_object_or_404(QuizSession, user=user, end_time__gt=timezone.now())
+  if not quiz_session.is_time_up():
+    quiz_session.end_time = timezone.now()
+    quiz_session.save()
+  score = 0
+  user_answers = UserAnswer.objects.filter(user=user, question__quiz=quiz)
+  for user_answer in user_answers:
+    if user_answer.choice.is_correct
+    score += 1
+  Score.objects.create(user=user, score=score, quiz_name=quiz.name)
+  return redirect('quiz_result', quiz_id=quiz_id)
+
+@login_required
+def quiz_result(request, quiz_id):
+  quiz = get_object_or_404(Quiz, id=quiz_id)
 
 @login_required
 def calculate_score(request):
