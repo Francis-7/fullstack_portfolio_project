@@ -62,14 +62,21 @@ def home(request):
 # user dashboard view
 @login_required
 def dashboard(request):
-  # profile, created = UserProfile.objects.get_or_create(user=request.user)
 
   try:
       profile = UserProfile.objects.get(user=request.user)
+
   except UserProfile.DoesNotExist:
       profile = None  # Handle the case where no profile exists for the user
+  
+  scores = Score.objects.filter(user=request.user)
+  user_answers = UserAnswer.objects.filter(user=request.user)
 
-  return render(request, 'quizApp/dashboard.html', {'profile': profile})
+  return render(request, 'quizApp/dashboard.html', {
+        'profile': profile,
+        'scores': scores,
+        'user_answers': user_answers
+    })
 
 
 @login_required
@@ -102,11 +109,11 @@ def start_quiz(request, quiz_id):
   quiz = get_object_or_404(Quiz, id=quiz_id)
   user = request.user
   if not QuizSession.objects.filter(user=user, end_time__gt=timezone.now()).exists():
-    quiz_session = QuizSession.objects.create(user=user, start_time=timezone.now())
+    quiz_session = QuizSession.objects.create(user=user, quiz=quiz, start_time=timezone.now(), end_time=None)
     quiz_session.start_quiz()
     quiz_session.save()
   quiz_session = QuizSession.objects.get(user=user, end_time__gt=timezone.now())
-  return render(request, 'quizApp/quiz_start.html', {'quiz' : quiz, 'quiz_session' : quiz_session})
+  return render(request, 'quizApp/start_quiz.html', {'quiz' : quiz, 'quiz_session' : quiz_session})
 
 @login_required
 def submit_quiz(request, quiz_id):
@@ -118,10 +125,13 @@ def submit_quiz(request, quiz_id):
     quiz_session.save()
   score = 0
   user_answers = UserAnswer.objects.filter(user=user, question__quiz=quiz)
+  
   for user_answer in user_answers:
     if user_answer.choice.is_correct:
       score += 1
-  Score.objects.create(user=user, score=score, quiz_name=quiz.name)
+
+  user_score, created = Score.objects.update_or_create(user=user, quiz_name=quiz.name, defaults={'score': score})
+    
   return redirect('quiz_result', quiz_id=quiz_id)
 
 @login_required

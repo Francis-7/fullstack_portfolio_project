@@ -7,6 +7,8 @@
 {% block content %}
     <div class="text-center">
         <h1 class="display-4">{{ quiz.name }}</h1>
+        <p>quiz started at {{ quiz_session.start_time }}</p>
+        <a href="{% url 'quiz_page' quiz.id %}"  class="btn btn-primary">Go</a>
     </div>
 {% endblock  %}
     

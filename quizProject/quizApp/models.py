@@ -82,10 +82,10 @@ class QuizSession(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quiz_session', default=1)
   start_time = models.DateTimeField(auto_now_add=True)
-  end_time = models.DateTimeField()
+  end_time = models.DateTimeField(null=True, blank=True)
 
   def start_quiz(self):
     self.end_time = self.start_time + timedelta(minutes=15)
 
   def is_time_up(self):
-    return timezone.now() > self.endtime
+    return timezone.now() > self.end_time

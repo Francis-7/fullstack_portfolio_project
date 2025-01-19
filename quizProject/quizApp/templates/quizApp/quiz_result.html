@@ -1,0 +1,17 @@
+{% extends 'quizApp/base.html' %}
+
+{% block title %}
+    Results
+{% endblock  %}
+
+{% block content %}
+    <div class="text-center">
+        <h1>Score: {{ score.score }} in {{ score.quiz_name }}</h1>
+    </div>
+    <div class="text-center mt-5 ">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary text-light btn-outline-primary" role="button">Back to Dashboard</a>
+    </div>
+
+{% endblock  %}
+    
+    
