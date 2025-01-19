@@ -96,6 +96,12 @@ def quiz_list(request):
   quizzes = Quiz.objects.all()
   return render(request, 'quizApp/quiz_list.html', {'quizzes' : quizzes})
 
+
+@login_required
+def start_quiz(request, quiz_id):
+  quiz = get_object_or_404(Quiz, id=quiz_id)
+  user = request.user
+  
 @login_required
 def submit_quiz(request, quiz_id):
   quiz = get_object_or_404(Quiz, id=quiz_id)
@@ -115,6 +121,9 @@ def submit_quiz(request, quiz_id):
 @login_required
 def quiz_result(request, quiz_id):
   quiz = get_object_or_404(Quiz, id=quiz_id)
+  user = request.user
+  score = Score.objects.filter(user=user, quiz_name=quiz.name).first()
+  return render(request, 'quizApp/quiz_result.html', {'quiz' : quiz, 'score' : score})
 
 @login_required
 def calculate_score(request):
