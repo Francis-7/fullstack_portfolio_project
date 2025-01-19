@@ -80,6 +80,7 @@ class UserAnswer(models.Model):
   
 class QuizSession(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
+  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quiz_session')
   start_time = models.DateTimeField(auto_now_add=True)
   end_time = models.DateTimeField()
 
