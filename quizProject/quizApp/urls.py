@@ -14,7 +14,9 @@ urlpatterns = [
   path('quiz_list_view/', views.quiz_list_view, name='quiz'),
   path('quiz/<int:id>/', views.quiz_detail_view, name='quiz-detail'),
   path('quiz_questions/', views.quiz_questions, name='quiz-questions'),
-  path('submit_quiz/')
+  path('submit_quiz/<int:quiz_id>/', views.submit_quiz, name='submit_quiz'),
+  path('start_quiz/<int:quiz_id>/', views.start_quiz, name='start_quiz'),
+  path('quiz_result/<int:quiz_id>/', views.quiz_result, name='quiz_result'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
