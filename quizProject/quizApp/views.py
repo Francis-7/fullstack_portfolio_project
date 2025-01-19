@@ -75,14 +75,21 @@ def dashboard(request):
 @login_required
 def quiz_page(request, quiz_id):
   quiz = get_object_or_404(Quiz, id=quiz_id)
+  user = request.user
+  quiz_session = get_object_or_404(QuizSession, user=user, end_time__gt=timezone.now())
+
+  if quiz_session.is_time_up():
+    return redirect('submit_quiz', quiz_id=quiz_id)
+  
   questions = quiz.questions.all()
   if request.method == 'POST':
     for question in questions:
       selected_choice_id = request.POST.get(f'question_{question.question_num}')
       if selected_choice_id:
         selected_choice = get_object_or_404(Choice, id=selected_choice_id)
-      
-  return render(request, 'quizApp/quiz_page.html', {'quiz': quiz, 'questions': questions})
+        UserAnswer.objects.update_or_create(user=user, question=question, defaults={'choice' : selected_choice})
+      return redirect('submit_quiz', quiz_id=quiz_id)
+  return render(request, 'quizApp/quiz_page.html', {'quiz': quiz, 'quiz_session' : quiz_session, 'questions': questions})
  
 @login_required
 def quiz_list(request):
