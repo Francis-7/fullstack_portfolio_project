@@ -5,9 +5,44 @@
 {% endblock  %}
 
 {% block content %}
-    <div class="text-center">
-        <h1 class="display-4">Quiz Result</h1>
-    </div>
+    
+    <style>
+        .result-card {
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .result-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .questions {
+            user-select: none;
+        }
+    </style>
+
+    <div class="container my-5">
+
+        <div class="result-card">
+            <div class="card shadow">
+                <div class="card-header text-center bg-primary text-white">
+                    <h5>Quiz Result Summary</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ score.user.profile.user }}</p>
+                    <hr>
+                    <p><strong>Quiz:</strong> {{ score.quiz.name }}</p>
+                    <p><strong>Total Questions:</strong> {{ score.quiz.questions.all }}</p>
+                    <p><strong>Total Correct Answers:</strong> {{ score.score }}</p>
+                    <p><strong>Submit at:</strong> {{ score.date_recorded|timesince }} ago</p>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a>
+                    <a href="{% url 'quiz_page' score.quiz.id %}" class="btn btn-primary">Retake</a>
+                </div>
+            </div>
+        </div>
+        
 {% endblock  %}
     
     

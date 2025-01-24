@@ -35,7 +35,7 @@ class Choice(models.Model):
   question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="all_questions", default='{question.question}')
   Options = models.TextChoices('Options', 'A B C D')
   choice = models.CharField(max_length=1, choices=Options)
-  answer_to_question = models.TextField(unique=True, default="your answer")
+  answer_to_question = models.TextField(default="your answer")
   is_correct = models.BooleanField(default=False)
 
   class Meta:
@@ -55,21 +55,24 @@ class UserProfile(models.Model):
 
 class Score(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
+  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, default=1)
   score = models.IntegerField()
   date_recorded = models.DateTimeField(auto_now_add=True)
-  quiz_name = models.CharField(max_length=30, blank=True, null=True)
 
   class Meta:
     db_table = 'scores'
     ordering = ['-date_recorded']
+    unique_together = ('user', 'quiz')
   
   def __str__(self):
     return f"{self.user.username} - {self.score} ({self.date_recorded})"
 
 class UserAnswer(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
+  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, default=1)
   question = models.ForeignKey(Question, on_delete=models.CASCADE)
   choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+  is_correct = models.BooleanField(default=False)
 
   class Meta:
     db_table = 'user_answer'
@@ -81,11 +84,14 @@ class UserAnswer(models.Model):
 class QuizSession(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='quiz_session', default=1)
-  start_time = models.DateTimeField(auto_now_add=True)
+  start_time = models.DateTimeField(default=timezone.now)
   end_time = models.DateTimeField(null=True, blank=True)
 
   def start_quiz(self):
-    self.end_time = self.start_time + timedelta(minutes=15)
+    self.end_time = self.start_time + timedelta(minutes=5)
+    self.save()
 
   def is_time_up(self):
-    return timezone.now() > self.end_time
+    if self.end_time:
+      return timezone.now() > self.end_time
+    return False

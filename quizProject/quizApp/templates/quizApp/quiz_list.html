@@ -8,23 +8,14 @@
     <div>
         <h1 class="display-4 p-2 text-center">Available Quizzes</h1>
         <ul>
-            
             {% for quiz in quizzes %}
                 <p>
-                    <div class="dropdown">
-                        <a href="#" class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" >{{ quiz.name }}</a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a href="{% url 'start_quiz' quiz.id %}" class="dropdown-item active">Start</a></li>
-                        </ul>
-                    
-                        
+                    <div >
+                        <!-- Corrected URL reference to use quiz.id -->
+                        <a href="{% url 'start_quiz' quiz.id %}" class="btn btn-secondary" role="button">{{ quiz.name }}</a>
                     </div>
                 </p>
-                
             {% endfor %}
-                
         </ul>
     </div>
 {% endblock  %}
-    
-    

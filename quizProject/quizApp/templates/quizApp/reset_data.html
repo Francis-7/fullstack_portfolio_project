@@ -1,0 +1,15 @@
+{% extends 'quizApp/base.html' %}
+
+
+{% block title %}
+    Reset
+{% endblock  %}
+
+{% block content %}
+    <h1 class="text-center display-4">Clear all data?</h1>
+<form method="post" class="text-center">
+  {% csrf_token %} <button type="submit" class="btn btn-danger">Yes</button>
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock  %}
+    
