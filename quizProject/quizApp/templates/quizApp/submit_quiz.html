@@ -33,7 +33,8 @@
                     <hr>
                     <p><strong>Quiz:</strong> {{ score.quiz.name }}</p>
                     <p><strong>Total Questions:</strong> {{ score.quiz.questions.all }}</p>
-                    <p><strong>Total Correct Answers:</strong> {{ score.score }}</p>
+                    <p><strong>Total Correct Answers:</strong> {{ score.score.correct }}</p>
+                    <p><strong>Total Incorrect Answers:</strong> {{ score.score.incorrect }}</p>
                     <p><strong>Submit at:</strong> {{ score.date_recorded|timesince }} ago</p>
                 </div>
                 <div class="card-footer text-center">

@@ -26,15 +26,13 @@ class UserRegistrationForm(UserCreationForm):
       'password2' : forms.PasswordInput(attrs={'placeholder' : '', 'class' : 'form-control'}),
       
     }
-
-  # def save(self, commit=True):
-  #   user = super().save(commit=False)
-  #   if commit:
-  #     user.save()
-  #     UserProfile.objects.create(user=user)
-  #   return user
   
 
 class UserLoginForm(AuthenticationForm):
   username = forms.CharField(max_length=50)
   password = forms.CharField(widget=forms.PasswordInput)
+
+class ProfilePictureForm(forms.ModelForm):
+  class Meta:
+    model = UserProfile
+    fields = ['profile_picture']

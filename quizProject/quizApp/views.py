@@ -2,9 +2,9 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegistrationForm, UserLoginForm
+from .forms import UserRegistrationForm, UserLoginForm, ProfilePictureForm
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSession, Quiz
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -58,24 +58,29 @@ def logout_view(request):
 
 # home view
 def home(request):
-  return render(request, 'quizApp/home.html')
+  quiz = Quiz.objects.all()
+  return render(request, 'quizApp/home.html', {'quiz' : quiz})
 
 # user dashboard view
 @login_required
 def dashboard(request):
-
-  try:
-      profile = UserProfile.objects.get(user=request.user)
-
-  except UserProfile.DoesNotExist:
-      profile = None  # Handle the case where no profile exists for the user
-  
+  profile = UserProfile.objects.filter(user=request.user).first()
   scores = Score.objects.filter(user=request.user)
-  # user_answers = UserAnswer.objects.filter(user=request.user)
+  has_taken_quizzes = scores.exists()
+
+  if request.method == 'POST' and 'update_picture' in request.POST:
+     form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
+     if form.is_valid():
+        form.save()
+        return redirect('dashboard')
+  else:
+      form = ProfilePictureForm(instance=profile)
 
   return render(request, 'quizApp/dashboard.html', {
         'profile': profile,
         'scores': scores,
+        'has_taken_quizzes': has_taken_quizzes,
+        'form': form,
         
     })
 
@@ -83,16 +88,6 @@ def dashboard(request):
 @login_required
 def quiz_page(request, id):
   quiz = get_object_or_404(Quiz, id=id)
-  
-  if request.method == 'POST':
-    
-    # Get the score
-    score = int(request.POST.get('score', 0))
-
-    # Save the user's submission with score
-    Score.objects.create(user=request.user, quiz=quiz, score=score)
-
-    return redirect('submit_quiz', id=id)
   return render(request, 'quizApp/quiz_page.html', {'quiz': quiz})
  
 @login_required
@@ -254,3 +249,7 @@ def submit_quiz(request, id):
       # Or you could set a default score if needed
       score = None
    return render(request, 'quizApp/submit_quiz.html', {'score' : score})
+
+@user_passes_test(lambda u: u.is_superuser)
+def add_quiz(request):
+   

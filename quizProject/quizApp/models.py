@@ -7,6 +7,8 @@ class Quiz(models.Model):
   name = models.CharField(max_length=100)
   description = models.TextField(null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
+  number_of_questions = models.IntegerField(default=1)
+  time = models.IntegerField(help_text="Duration of the quiz in seconds", default="120")
   
 
 
@@ -18,8 +20,11 @@ class Quiz(models.Model):
   def __str__(self):
     return f"{self.name}"
   
+  def get_questions(self):
+        return self.question_set.all()
+  
 class Question(models.Model):
-  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
+  quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
   question_num = models.IntegerField(primary_key=True)
   question = models.TextField(unique=True)
   author = models.CharField(max_length=30)
@@ -32,7 +37,7 @@ class Question(models.Model):
     return f"{self.question}"
     
 class Choice(models.Model):
-  question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="all_questions", default='{question.question}')
+  question = models.ForeignKey(Question, on_delete=models.CASCADE, default='{question.question}')
   Options = models.TextChoices('Options', 'A B C D')
   choice = models.CharField(max_length=1, choices=Options)
   answer_to_question = models.TextField(default="your answer")
@@ -50,6 +55,7 @@ class UserProfile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_profile")
   question = models.ManyToManyField(Question)
   choice = models.ManyToManyField(Choice)
+  profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
   
 
