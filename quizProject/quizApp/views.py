@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegistrationForm, UserLoginForm, ProfilePictureForm
+from .forms import UserRegistrationForm, UserLoginForm, ProfilePictureForm, QuizForm, QuestionForm, ChoiceForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import UserProfile, Question, Choice, Score, UserAnswer, QuizSession, Quiz
@@ -84,11 +84,30 @@ def dashboard(request):
         
     })
 
-
 @login_required
-def quiz_page(request, id):
+def quiz_page_view(request, id):
   quiz = get_object_or_404(Quiz, id=id)
-  return render(request, 'quizApp/quiz_page.html', {'quiz': quiz})
+  questions = quiz.get_questions()
+  total_questions = questions.count()
+  user_answers = []
+
+  if request.method == 'POST':
+     score = 0
+     for question in questions:
+        selected_choice_id = request.POST.get(f'question_{question.question_num}')
+        if selected_choice_id:
+           choice = Choice.objects.get(id=selected_choice_id)
+           is_correct = choice.is_correct
+           UserAnswer.objects.create(user=request.user, quiz=quiz, question=question, choice=choice, is_correct=is_correct)
+           if is_correct:
+              score += 1
+     Score.objects.update_or_create(user=request.user, quiz=quiz, defaults={'score' : score})
+     return redirect('submit_quiz', id=id)
+  return render(request, 'quizApp/quiz_page.html', {
+     'quiz' : quiz,
+     'questions' : questions,
+     'total_questions' : total_questions
+  })
  
 @login_required
 def quiz_list(request):
@@ -241,15 +260,105 @@ def reset_data(request):
 
 @login_required
 def submit_quiz(request, id):
-   quiz = get_object_or_404(Quiz, id=id)
-   score = Score.objects.filter(user=request.user, quiz=quiz).first()
+    quiz = get_object_or_404(Quiz, id=id)
+    
+    # Fetch the score
+    score = Score.objects.filter(user=request.user, quiz=quiz).first()
+    
+    if not score:
+        # Handle the case where no score exists (this should be rare)
+        score = None
 
-   # If no score is found, you can handle it with a message or set score to 0 (or other logic)
-   if not score:
-      # Or you could set a default score if needed
-      score = None
-   return render(request, 'quizApp/submit_quiz.html', {'score' : score})
+    # Get all the questions for the quiz
+    questions = quiz.get_questions()
+
+    # Fetch all UserAnswer entries for this user and quiz
+    user_answers = UserAnswer.objects.filter(user=request.user, quiz=quiz)
+
+    # Calculate total, attempted, correct, and incorrect answers
+    total_questions = questions.count()
+    attempted = user_answers.count()
+    correct_answers = user_answers.filter(is_correct=True).count()
+    incorrect_answers = attempted - correct_answers  # Total attempted minus correct gives incorrect answers
+
+    # Pass the data to the template
+    return render(request, 'quizApp/submit_quiz.html', {
+        'quiz': quiz,
+        'score': score,
+        'total_questions': total_questions,
+        'attempted': attempted,
+        'correct_answers': correct_answers,
+        'incorrect_answers': incorrect_answers
+    })
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def add_quiz(request):
-   
+   if request.method == 'POST':
+      form = QuizForm(data=request.POST)
+      if form.is_valid():
+         form.save()
+         return redirect('dashboard')
+   else:
+      form = QuizForm()
+   return render(request, "quizApp/add_quiz.html", {'form':form})
+
+@user_passes_test(lambda u: u.is_superuser)
+def add_question(request):
+   if request.method == 'POST':
+      form = QuestionForm(data=request.POST)
+      if form.is_valid():
+         form.save()
+         return redirect('dashboard')
+   else:
+      form = QuizForm()
+   return render(request, "quizApp/add_question.html", {'form':form})
+
+@user_passes_test(lambda u: u.is_superuser)
+def add_choice(request):
+   if request.method == 'POST':
+      form = ChoiceForm(data=request.POST)
+      if form.is_valid():
+         form.save()
+         return redirect('dashboard')
+   else:
+      form = QuizForm
+   return render(request, "quizApp/add_choice.html", {'form':form})
+
+
+
+@login_required
+def quiz_page(request, id):
+    quiz = get_object_or_404(Quiz, id=id)
+    questions = quiz.get_questions()
+    total_questions = questions.count()
+
+    # If the request method is POST, process the form submission
+    if request.method == 'POST':
+        # Clear previous answers (to allow the user to retake)
+        UserAnswer.objects.filter(user=request.user, quiz=quiz).delete()
+
+        score = 0
+        for question in questions:
+            selected_choice_id = request.POST.get(f'question_{question.question_num}')
+            if selected_choice_id:
+                choice = Choice.objects.get(id=selected_choice_id)
+                is_correct = choice.is_correct
+                # Create new UserAnswer for this submission
+                UserAnswer.objects.create(
+                    user=request.user, quiz=quiz, question=question, choice=choice, is_correct=is_correct)
+                
+                if is_correct:
+                    score += 1
+        
+        # Update or create the score for the user
+        Score.objects.update_or_create(user=request.user, quiz=quiz, defaults={'score': score})
+
+        # Redirect to the submit_quiz page to display the results
+        return redirect('submit_quiz', id=id)
+
+    return render(request, 'quizApp/quiz_page.html', {
+        'quiz': quiz,
+        'questions': questions,
+        'total_questions': total_questions
+    })

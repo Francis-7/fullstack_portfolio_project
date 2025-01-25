@@ -49,7 +49,16 @@
               </li>
               {% if user.is_superuser %}
               <li class="nav-item">
-                <a class="nav-link" href="/admin">Admin</a>
+                <div class="dropdown">
+                  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" 
+                  data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'add_quiz' %}">Add Quiz</a></li>
+                    <li><a class="dropdown-item" href="{% url 'add_question' %}">Add Question</a></li>
+                    <li><a class="dropdown-item" href="{% url 'add_choice' %}">Add Choice</a></li>
+                  </ul>
+                </div>
+                
               </li>
               {% endif %}
           </ul>

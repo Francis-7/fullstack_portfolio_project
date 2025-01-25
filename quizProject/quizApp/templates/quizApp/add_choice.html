@@ -1,0 +1,17 @@
+{% extends 'quizApp/base.html' %}
+
+{% block title %}
+    Add Choice
+{% endblock  %}
+
+{% block content %}
+    <div class="mt-3">
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-primary">save</button>
+        </form>
+    </div>
+{% endblock  %}
+    
+    

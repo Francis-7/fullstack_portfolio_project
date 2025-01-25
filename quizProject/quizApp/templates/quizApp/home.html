@@ -98,14 +98,15 @@
 
 <!-- cards -->
 <div class="container">
+  <div class="d-flex align-content-stretch flex-wrap">
   <div class="container mx-auto mt-2">
     <div class="row">
 
       {% for i in quiz %}
-      <div class="col-md-4">
-        <div class="card" style="width: 25rem;">
+      <div class="col-sm-6">
+        <div class="card">
           <div class="card-body">
-            <h5 class="card-title" style="text-align: center;">{{i.name}}</h5>
+            <h5 class="card-title text-center" >{{i.name}}</h5>
             <br>
             <p class="card-text">{{i.description}}</p>
             <br>
@@ -118,6 +119,7 @@
       </div>
       {% endfor %}
     </div>
+  </div>
   </div>
 </div>
 {% endblock content %}

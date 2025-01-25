@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import UserProfile
+from .models import UserProfile, Quiz, Question, Choice
 
 class UserRegistrationForm(UserCreationForm):
 
@@ -36,3 +36,19 @@ class ProfilePictureForm(forms.ModelForm):
   class Meta:
     model = UserProfile
     fields = ['profile_picture']
+
+
+class QuizForm(forms.ModelForm):
+  class Meta:
+    model = Quiz
+    fields = ['name', 'description', 'number_of_questions', 'time']
+
+class QuestionForm(forms.ModelForm):
+  class Meta:
+    model = Question
+    fields = '__all__'
+
+class ChoiceForm(forms.ModelForm):
+  class Meta:
+    model = Choice
+    fields = '__all__'

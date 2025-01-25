@@ -17,6 +17,10 @@ urlpatterns = [
   path('quiz_result/<int:id>/', views.quiz_result, name='quiz_result'),
   path('quiz/<int:id>/start/', views.start_quiz, name='start_quiz'),
   path('reset_data/', views.reset_data, name='reset_data'),
+  path('add_quiz', views.add_quiz, name='add_quiz'),
+  path('add_question', views.add_question, name='add_question'),
+  path('add_choice', views.add_choice, name='add_choice'),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

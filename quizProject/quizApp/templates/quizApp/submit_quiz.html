@@ -28,14 +28,14 @@
                 <div class="card-header text-center bg-primary text-white">
                     <h5>Quiz Result Summary</h5>
                 </div>
-                <div class="card-body">
-                    <p><strong>Name:</strong> {{ score.user.profile.user }}</p>
+                <div class="card-body fst-italic text-center">
+                    <p><strong>Name:</strong> {{ score.user.username }}</p>
                     <hr>
                     <p><strong>Quiz:</strong> {{ score.quiz.name }}</p>
-                    <p><strong>Total Questions:</strong> {{ score.quiz.questions.all }}</p>
-                    <p><strong>Total Correct Answers:</strong> {{ score.score.correct }}</p>
-                    <p><strong>Total Incorrect Answers:</strong> {{ score.score.incorrect }}</p>
-                    <p><strong>Submit at:</strong> {{ score.date_recorded|timesince }} ago</p>
+                    <p><strong>Total Questions:</strong> {{ total_questions }}</p>
+                    <p><strong>Total Correct Answers:</strong> {{ correct_answers }}</p>
+                    <p><strong>Total Incorrect Answers:</strong> {{ incorrect_answers }}</p>
+                    <p><strong>Submitted at:</strong> {{ score.date_recorded|timesince }} ago</p>
                 </div>
                 <div class="card-footer text-center">
                     <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a>
@@ -44,6 +44,5 @@
             </div>
         </div>
         
-{% endblock  %}
-    
-    
+    </div>
+{% endblock %}
