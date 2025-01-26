@@ -362,10 +362,51 @@ def add_choice(request):
 
 
 @login_required
+def quiz_page_backup(request, id):
+    quiz = get_object_or_404(Quiz, id=id)
+    questions = quiz.get_questions()
+    total_questions = questions.count()
+
+    # If the request method is POST, process the form submission
+    if request.method == 'POST':
+        # Clear previous answers (to allow the user to retake)
+        UserAnswer.objects.filter(user=request.user, quiz=quiz).delete()
+
+        score = 0
+        for question in questions:
+            selected_choice_id = request.POST.get(f'question_{question.question_num}')
+            if selected_choice_id:
+                choice = Choice.objects.get(id=selected_choice_id)
+                is_correct = choice.is_correct
+                # Create new UserAnswer for this submission
+                UserAnswer.objects.create(
+                    user=request.user, quiz=quiz, question=question, choice=choice, is_correct=is_correct)
+                
+                if is_correct:
+                    score += 1
+        
+        # Update or create the score for the user
+        Score.objects.update_or_create(user=request.user, quiz=quiz, defaults={'score': score})
+
+        # Redirect to the submit_quiz page to display the results
+        return redirect('submit_quiz', id=id)
+
+    return render(request, 'quizApp/quiz_page.html', {
+        'quiz': quiz,
+        'questions': questions,
+        'total_questions': total_questions
+    })
+
+
+@login_required
 def quiz_page(request, id):
     quiz = get_object_or_404(Quiz, id=id)
     questions = quiz.get_questions()
     total_questions = questions.count()
+
+    # Fetch the quiz session or create a new one
+    quiz_session, created = QuizSession.objects.get_or_create(user=request.user, quiz=quiz, end_time__isnull=True)
+    
 
     # If the request method is POST, process the form submission
     if request.method == 'POST':
