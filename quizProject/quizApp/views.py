@@ -436,6 +436,10 @@ def quiz_page(request, id):
         # Update or create the score for the user
         Score.objects.update_or_create(user=request.user, quiz=quiz, defaults={'score': score})
 
+        # Mark the quiz session as ended by setting the end_time
+        quiz_session.end_time = timezone.now()
+        quiz_session.save()
+
         # Redirect to the submit_quiz page to display the results
         return redirect('submit_quiz', id=id)
 
