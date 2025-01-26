@@ -457,7 +457,7 @@ def quiz_page_backup_2(request, id):
 
 
 @login_required
-def quiz_page(request, id):
+def quiz_page_backup_3(request, id):
     quiz = get_object_or_404(Quiz, id=id)
     questions = quiz.get_questions()
     total_questions = questions.count()
@@ -505,6 +505,79 @@ def quiz_page(request, id):
 
         # Redirect to the submit_quiz page to display the results
         return redirect('submit_quiz', id=id)
+
+    return render(request, 'quizApp/quiz_page.html', {
+        'quiz': quiz,
+        'questions': questions,
+        'total_questions': total_questions,
+        'remaining_time': remaining_time,  # Pass the remaining time to the template
+    })
+
+
+import random
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from .models import Quiz, QuizSession, UserAnswer, Score
+
+@login_required
+def quiz_page(request, id):
+    quiz = get_object_or_404(Quiz, id=id)
+    questions = quiz.get_questions()
+    total_questions = questions.count()
+
+    # Shuffle questions
+    questions = list(questions)  # Convert the queryset to a list so shuffle works
+    random.shuffle(questions)
+
+    # Fetch the quiz session or create a new one
+    quiz_session, created = QuizSession.objects.get_or_create(user=request.user, quiz=quiz, end_time__isnull=True)
+    
+    if created:
+        # Start the quiz by setting the end time dynamically from the quiz time (in seconds)
+        quiz_session.start_quiz()
+
+    # Check if the time is up
+    if quiz_session.is_time_up():
+        return redirect('submit_quiz', id=id)
+
+    # Calculate remaining time (in seconds)
+    remaining_time = 0
+    if quiz_session.end_time:
+        remaining_time = (quiz_session.end_time - timezone.now()).total_seconds()
+
+    # Handle quiz submission
+    if request.method == 'POST':
+        # Clear previous answers (to allow the user to retake)
+        UserAnswer.objects.filter(user=request.user, quiz=quiz).delete()
+
+        score = 0
+        for question in questions:
+            selected_choice_id = request.POST.get(f'question_{question.question_num}')
+            if selected_choice_id:
+                choice = Choice.objects.get(id=selected_choice_id)
+                is_correct = choice.is_correct
+                # Create new UserAnswer for this submission
+                UserAnswer.objects.create(
+                    user=request.user, quiz=quiz, question=question, choice=choice, is_correct=is_correct)
+                
+                if is_correct:
+                    score += 1
+        
+        # Update or create the score for the user
+        Score.objects.update_or_create(user=request.user, quiz=quiz, defaults={'score': score})
+
+        # Mark the quiz session as ended by setting the end_time
+        quiz_session.end_time = timezone.now()
+        quiz_session.save()
+
+        # Redirect to the submit_quiz page to display the results
+        return redirect('submit_quiz', id=id)
+
+    # Shuffle choices for each question
+    for question in questions:
+        choices = list(question.choice_set.all())  # Convert choices queryset to a list
+        random.shuffle(choices)  # Shuffle choices
+        question.choices = choices  # Add shuffled choices to the question
 
     return render(request, 'quizApp/quiz_page.html', {
         'quiz': quiz,
