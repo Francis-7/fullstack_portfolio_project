@@ -25,9 +25,10 @@
             <label for="question">Select Question:</label>
             <select name="question" id="question" class="form-control">
                 {% for question in questions %}
-                    <option value="{{ question.question }}">{{ question.question }}</option>
+                    <option value="{{ question.id }}">{{ question.question }}</option>  <!-- Use question.id as the value -->
                 {% endfor %}
             </select>
+
         </div>
 
         {{ form.as_p }}

@@ -37,7 +37,7 @@ class Question(models.Model):
     return f"{self.question}"
     
 class Choice(models.Model):
-  question = models.ForeignKey(Question, on_delete=models.CASCADE, default='{question.question}')
+  question = models.ForeignKey(Question, on_delete=models.CASCADE)
   Options = models.TextChoices('Options', 'A B C D')
   choice = models.CharField(max_length=1, choices=Options)
   answer_to_question = models.TextField(default="your answer")

@@ -359,6 +359,45 @@ def add_choice(request):
    })
 
 
+from django.shortcuts import render, redirect
+from .models import Quiz, Question, Choice
+
+@user_passes_test(lambda u: u.is_superuser)
+def add_choice_saved_for_later(request):
+    if request.method == 'POST':
+        quiz_id = request.POST.get('quiz')
+        question_id = request.POST.get('question')
+        choice_value = request.POST.get('choice')  # assuming you have a choice field
+
+        # Retrieve the selected Question and Quiz
+        try:
+            quiz = Quiz.objects.get(id=quiz_id)
+            question = Question.objects.get(id=question_id)
+        except Quiz.DoesNotExist or Question.DoesNotExist:
+            # Handle the case where quiz or question doesn't exist
+            return redirect('error_page')  # Adjust error handling as needed
+
+        # Create the new Choice
+        new_choice = Choice.objects.create(
+            question=question,
+            choice=choice_value,
+            answer_to_question="your answer",
+            is_correct=False  # You can set this according to your form input
+        )
+
+        # Redirect after saving
+        return redirect('some_view')  # Adjust the redirection as needed
+
+    # Get quizzes and questions for the form
+    quiz_list = Quiz.objects.all()
+    questions = Question.objects.filter(quiz_id=request.GET.get('quiz'))
+
+    return render(request, 'quizApp/add_choice.html', {
+        'quiz_list': quiz_list,
+        'questions': questions
+    })
+
+
 
 
 @login_required
