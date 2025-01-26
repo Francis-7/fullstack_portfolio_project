@@ -411,6 +411,10 @@ def quiz_page(request, id):
         # Start the quiz by setting the end time (5 minutes from now)
         quiz_session.start_quiz()
 
+    # Check if the time is up
+    if quiz_session.is_time_up():
+        return redirect('submit_quiz', id=id)
+
     # If the request method is POST, process the form submission
     if request.method == 'POST':
         # Clear previous answers (to allow the user to retake)
