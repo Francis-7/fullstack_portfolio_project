@@ -407,6 +407,9 @@ def quiz_page(request, id):
     # Fetch the quiz session or create a new one
     quiz_session, created = QuizSession.objects.get_or_create(user=request.user, quiz=quiz, end_time__isnull=True)
     
+    if created:
+        # Start the quiz by setting the end time (5 minutes from now)
+        quiz_session.start_quiz()
 
     # If the request method is POST, process the form submission
     if request.method == 'POST':
