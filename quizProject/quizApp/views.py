@@ -442,7 +442,7 @@ def quiz_page(request, id):
 
         # Redirect to the submit_quiz page to display the results
         return redirect('submit_quiz', id=id)
-
+    remaining_time = quiz_session.remaining_time()
     return render(request, 'quizApp/quiz_page.html', {
         'quiz': quiz,
         'questions': questions,
