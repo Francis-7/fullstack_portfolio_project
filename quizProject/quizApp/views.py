@@ -446,5 +446,6 @@ def quiz_page(request, id):
     return render(request, 'quizApp/quiz_page.html', {
         'quiz': quiz,
         'questions': questions,
-        'total_questions': total_questions
+        'total_questions': total_questions,
+        'remaining_time': remaining_time,
     })
