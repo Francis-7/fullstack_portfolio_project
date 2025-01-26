@@ -35,7 +35,17 @@
                     <p><strong>Total Questions:</strong> {{ total_questions }}</p>
                     <p><strong>Total Correct Answers:</strong> {{ correct_answers }}</p>
                     <p><strong>Total Incorrect Answers:</strong> {{ incorrect_answers }}</p>
-                    <p><strong>Submitted at:</strong> {{ score.date_recorded|timesince }} ago</p>
+                    
+
+                    {% if score.score == 0 %}
+                        <p class="text-danger"><strong>Try harder next time!</strong></p>
+                    {% elif score.score == total_score %}
+                        <p class="text-success"><strong>You aced the {{ score.quiz.name }} Quiz. Congrats!!! </strong></p>
+                    {% elif score.score >= average %}
+                        <p class="text-dark"><strong>Good performance! Above average</strong></p>
+                    {% else %}
+                        <p class="text-primary"><strong>You can do better next time. Below Average</strong></p>
+                    {% endif %}
                 </div>
                 <div class="card-footer text-center">
                     <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a>

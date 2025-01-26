@@ -288,7 +288,8 @@ def submit_quiz(request, id):
         'total_questions': total_questions,
         'attempted': attempted,
         'correct_answers': correct_answers,
-        'incorrect_answers': incorrect_answers
+        'incorrect_answers': incorrect_answers,
+        'average' : total_questions / 2,
     })
 
 
@@ -311,8 +312,23 @@ def add_question(request):
          form.save()
          return redirect('dashboard')
    else:
-      form = QuizForm()
+      form = QuestionForm()
    return render(request, "quizApp/add_question.html", {'form':form})
+
+@user_passes_test(lambda u: u.is_superuser)
+def add_choice_view(request):
+   if request.method == 'POST':
+      form = ChoiceForm(data=request.POST)
+      if form.is_valid():
+         form.save()
+         return redirect('dashboard')
+   else:
+      form = ChoiceForm()
+   return render(request, "quizApp/add_choice.html", {'form':form})
+
+from django.shortcuts import render, redirect
+from .forms import ChoiceForm
+from .models import Quiz, Question
 
 @user_passes_test(lambda u: u.is_superuser)
 def add_choice(request):
@@ -320,10 +336,28 @@ def add_choice(request):
       form = ChoiceForm(data=request.POST)
       if form.is_valid():
          form.save()
-         return redirect('dashboard')
+         return redirect('dashboard')  # Redirect to your dashboard or other relevant page
    else:
-      form = QuizForm
-   return render(request, "quizApp/add_choice.html", {'form':form})
+      # Get the quiz queryset and filter based on the selected quiz
+      quiz_list = Quiz.objects.all()
+
+      # Check if a quiz is selected (e.g., through GET or default selection)
+      selected_quiz = request.GET.get('quiz')  # Assume the quiz is being passed in the query params
+
+      # If a quiz is selected, filter questions based on the quiz
+      if selected_quiz:
+         questions = Question.objects.filter(quiz_id=selected_quiz)
+      else:
+         questions = Question.objects.all()
+
+      form = ChoiceForm()
+
+   return render(request, "quizApp/add_choice.html", {
+       'form': form,
+       'quiz_list': quiz_list,
+       'questions': questions,  # Pass filtered questions to the template
+   })
+
 
 
 

@@ -51,4 +51,6 @@ class QuestionForm(forms.ModelForm):
 class ChoiceForm(forms.ModelForm):
   class Meta:
     model = Choice
-    fields = '__all__'
+    fields = ['choice', 'answer_to_question', 'is_correct']
+
+    quiz = forms.ModelChoiceField(queryset=Quiz.objects.all(), required=False, empty_label="Select a Quiz")

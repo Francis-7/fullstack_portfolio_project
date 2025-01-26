@@ -5,13 +5,33 @@
 {% endblock  %}
 
 {% block content %}
-    <div class="mt-3">
-        <form method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-            <button class="btn btn-primary">save</button>
-        </form>
-    </div>
-{% endblock  %}
-    
-    
+<div class="mt-3">
+    <form method="get" action="">
+        {% csrf_token %}
+        <label for="quiz">Select Quiz:</label>
+        <select name="quiz" id="quiz" onchange="this.form.submit()">
+            <option value="">-- Choose a Quiz --</option>
+            {% for quiz in quiz_list %}
+                <option value="{{ quiz.id }}" {% if quiz.id == request.GET.quiz %}selected{% endif %}>
+                    {{ quiz.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="question">Select Question:</label>
+            <select name="question" id="question" class="form-control">
+                {% for question in questions %}
+                    <option value="{{ question.question }}">{{ question.question }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}
