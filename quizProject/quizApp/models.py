@@ -94,8 +94,10 @@ class QuizSession(models.Model):
   end_time = models.DateTimeField(null=True, blank=True)
 
   def start_quiz(self):
-    self.end_time = self.start_time + timedelta(minutes=5)
-    self.save()
+        # Use the quiz duration (in seconds) from the related Quiz object to set the end time
+        quiz_duration = self.quiz.time  # quiz.time is in seconds
+        self.end_time = self.start_time + timedelta(seconds=quiz_duration)
+        self.save()
 
   def is_time_up(self):
     if self.end_time:
