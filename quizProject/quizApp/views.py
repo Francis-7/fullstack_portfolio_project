@@ -414,6 +414,11 @@ def quiz_page(request, id):
     # Check if the time is up
     if quiz_session.is_time_up():
         return redirect('submit_quiz', id=id)
+    
+    # Calculate remaining time (in seconds)
+    remaining_time = 0
+    if quiz_session.end_time:
+        remaining_time = (quiz_session.end_time - timezone.now()).total_seconds()
 
     # If the request method is POST, process the form submission
     if request.method == 'POST':
@@ -442,7 +447,7 @@ def quiz_page(request, id):
 
         # Redirect to the submit_quiz page to display the results
         return redirect('submit_quiz', id=id)
-    remaining_time = quiz_session.remaining_time()
+    # remaining_time = quiz_session.remaining_time()
     return render(request, 'quizApp/quiz_page.html', {
         'quiz': quiz,
         'questions': questions,
